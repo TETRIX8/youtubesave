@@ -6,9 +6,11 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from flask import Flask, after_this_request, jsonify, render_template, request, send_file
+from flask_cors import CORS
 from yt_dlp import YoutubeDL
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 
 def _extract_info(video_url: str) -> Dict[str, Any]:
