@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FluxTube — Загрузка видео с YouTube</title>
+    <meta name="description" content="Скачивайте видео с YouTube в разном качестве: 144p–1080p, а также аудио. Быстро, безопасно и бесплатно." />
+    <meta name="theme-color" content="#0b0f1a" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <!-- Top indeterminate progress bar -->
+    <div id="topbar" class="topbar hidden"></div>
+    <div class="bg fx-gradient"></div>
+    <div class="bg fx-grid"></div>
+    <!-- Animated aurora background layer -->
+    <div class="bg fx-aurora"></div>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand">
+          <span class="brand-logo" aria-hidden="true">⬇️</span>
+          <span class="brand-name">FluxTube</span>
+        </a>
+        <nav class="nav">
+          <a href="#how">Как это работает</a>
+          <a href="#faq">FAQ</a>
+          <a href="https://github.com/yt-dlp/yt-dlp" target="_blank" rel="noopener" class="btn btn--sm btn--soft">yt‑dlp</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero container">
+        <div class="hero-copy">
+          <h1>
+            Скачивайте <span class="grad">YouTube</span> видео в любом качестве
+          </h1>
+          <p class="sub">От 144p до 1080p, а также аудио. Вставьте ссылку, выберите качество и скачайте — просто и быстро.</p>
+
+          <form id="fetchForm" class="url-form" autocomplete="off">
+            <div class="input-wrap">
+              <input id="urlInput" type="url" required placeholder="Вставьте ссылку на YouTube..." aria-label="Ссылка на YouTube" />
+              <button class="btn btn--primary" type="submit">Анализировать</button>
+            </div>
+            <p id="hint" class="muted small">Пример: https://www.youtube.com/watch?v=dQw4w9WgXcQ</p>
+          </form>
+
+          <div id="heroState" class="hero-state">
+            <div class="pulse"></div>
+            <span>Готов к работе</span>
+            <!-- Additional spinner appears only while busy -->
+            <div id="spinner" class="spinner hidden" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="hero-art">
+          <div class="orb"></div>
+          <div class="orb s2"></div>
+          <div class="glass card bouncy">
+            <div class="card-row">
+              <div class="dot" style="--c:#ff5f57"></div>
+              <div class="dot" style="--c:#ffbd2e"></div>
+              <div class="dot" style="--c:#28c840"></div>
+            </div>
+            <div class="bars">
+              <span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="result" class="section container hidden">
+        <!-- Skeleton while loading -->
+        <div id="skeleton" class="skeleton-wrap hidden" aria-hidden="true">
+          <div class="video-head">
+            <div class="skeleton thumb"></div>
+            <div class="meta">
+              <div class="skeleton line lg"></div>
+              <div class="skeleton line sm"></div>
+            </div>
+          </div>
+          <div class="formats-grid">
+            <div class="skeleton card"></div>
+            <div class="skeleton card"></div>
+            <div class="skeleton card"></div>
+            <div class="skeleton card"></div>
+            <div class="skeleton card"></div>
+            <div class="skeleton card"></div>
+          </div>
+        </div>
+        <div class="video-head">
+          <img id="thumb" alt="Превью" />
+          <div class="meta">
+            <h2 id="title"></h2>
+            <p class="muted" id="uploader"></p>
+          </div>
+        </div>
+        <div id="formats" class="formats-grid"></div>
+      </section>
+
+      <section id="how" class="section container">
+        <div class="section-head">
+          <h2>Как это работает</h2>
+          <p>Мы используем библиотеку yt‑dlp для получения доступных форматов. Вы скачиваете напрямую с наших серверов.</p>
+        </div>
+        <ol class="steps">
+          <li>Вставьте ссылку на YouTube</li>
+          <li>Выберите нужное качество</li>
+          <li>Скачайте файл</li>
+        </ol>
+      </section>
+
+      <section id="faq" class="section container">
+        <div class="section-head">
+          <h2>FAQ</h2>
+          <p>Короткие ответы на частые вопросы.</p>
+        </div>
+        <div class="faq">
+          <details class="faq-item">
+            <summary>Можно ли скачать 4K?</summary>
+            <p>Если ролик доступен в 4K, в списке появятся варианты видео (без звука). Их можно комбинировать с аудио дорожкой при помощи внешних инструментов (требуется ffmpeg).</p>
+          </details>
+          <details class="faq-item">
+            <summary>Почему иногда нет 1080p (video+audio)?</summary>
+            <p>YouTube часто предоставляет 1080p как отдельный видео‑поток без звука. Мы покажем доступные потоки — можно скачать раздельно видео и аудио.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Аудио доступно в mp3?</summary>
+            <p>Мы отдаем оригинальные форматы (обычно m4a/webm). Преобразование в mp3 требует ffmpeg и может быть добавлено позже.</p>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span class="muted">© <span id="y"></span> FluxTube</span>
+        <span class="muted">Powered by yt‑dlp</span>
+      </div>
+    </footer>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html> 
